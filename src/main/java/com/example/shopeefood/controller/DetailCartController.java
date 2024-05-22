@@ -5,6 +5,7 @@ import com.example.shopeefood.repository.IDetailCartRepository;
 import com.example.shopeefood.repository.IUserRepository;
 import com.example.shopeefood.service.cart.ICartService;
 import com.example.shopeefood.service.detailcart.IDetailCartService;
+import com.example.shopeefood.service.orderItem.IOrderItemService;
 import com.example.shopeefood.service.product.IProductService;
 import com.example.shopeefood.service.shop.IShopService;
 import com.example.shopeefood.service.user.IUserService;
@@ -23,6 +24,8 @@ public class DetailCartController {
     @Autowired
     private IDetailCartService iDetailCartService;
     @Autowired
+    private IOrderItemService iOrderItemService;
+    @Autowired
     private IShopService iShopService;
     @Autowired
     private IUserService iUserService;
@@ -33,6 +36,11 @@ public class DetailCartController {
     @Autowired
     private IDetailCartRepository idetailCartRepository;
 
+    @GetMapping()
+    public ResponseEntity<List<DetailCart>> DetailCart(){
+        List<DetailCart> detailCarts = (List<DetailCart>) iDetailCartService.findAll();
+        return new ResponseEntity<>(detailCarts, HttpStatus.OK);
+    }
     @GetMapping("/{idShop}/{idUser}")
     public ResponseEntity<List<DetailCart>> getDetailCart(@PathVariable Long idShop, @PathVariable Long idUser) {
         Optional<User> user = iUserService.findById(idUser);
@@ -52,30 +60,39 @@ public class DetailCartController {
         LocalDateTime currentDateTime = LocalDateTime.now();
         cart.get().setCreatedAt(currentDateTime);
         DetailCart detailCart = new DetailCart(product.get(),1,shop.get(),cart.get());
+        OrderItem orderItem = new OrderItem(detailCart.getId(),product.get(),1,shop.get(),cart.get());
         iDetailCartService.save(detailCart);
+        iOrderItemService.save(orderItem);
         return new ResponseEntity<>(detailCart, HttpStatus.CREATED);
     }
     @PutMapping("/plus/{id}")
     public ResponseEntity<DetailCart> plusCart(@PathVariable Long id) {
         Optional<DetailCart>  detailCart=  idetailCartRepository.findById(id);
-      int number=detailCart.get().getQuantity()+1;
-      detailCart.get().setQuantity(number);
+        Optional<OrderItem>  orderItem=  iOrderItemService.findById(id);
+        int number=detailCart.get().getQuantity()+1;
+        detailCart.get().setQuantity(number);
+        orderItem.get().setQuantity(number);
+        iOrderItemService.save(orderItem.get());
       return new ResponseEntity<>(iDetailCartService.save(detailCart.get()), HttpStatus.OK);
     }
     @PutMapping("/minus/{id}")
     public ResponseEntity<Void> minusCart(@PathVariable Long id) {
         Optional<DetailCart> detailCartOptional = idetailCartRepository.findById(id);
+        Optional<OrderItem> orderItemOptional = iOrderItemService.findById(id);
         if (!detailCartOptional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         DetailCart detailCart = detailCartOptional.get();
+        OrderItem orderItem = orderItemOptional.get();
         int number = detailCart.getQuantity() - 1;
         if (number <= 0) {
             idetailCartRepository.delete(detailCart);
+            iOrderItemService.remove(orderItem.getId());
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             detailCart.setQuantity(number);
             iDetailCartService.save(detailCart);
+            iOrderItemService.save(orderItem);
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
@@ -85,6 +102,7 @@ public class DetailCartController {
         if (!detailCart.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        iOrderItemService.remove(detailCart.get().getId());
         idetailCartRepository.delete(detailCart.get());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

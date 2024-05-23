@@ -51,12 +51,7 @@ public class ProductController {
         MultipartFile multipartFile = productFile.getImage();
         String fileName = multipartFile.getOriginalFilename();
         FileCopyUtils.copy(productFile.getImage().getBytes(), new File(fileUpload + fileName));
-
         LocalDateTime localDateTime = LocalDateTime.now();
-
-
-
-
             Product product = new Product(
                     productFile.getId(),
                     productFile.getName(),
@@ -74,9 +69,7 @@ public class ProductController {
         } catch (Exception ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.CREATED) ;
-
         }
-
     }
 }
 

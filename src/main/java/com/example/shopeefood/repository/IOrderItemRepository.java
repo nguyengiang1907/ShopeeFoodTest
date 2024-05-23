@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface IOrderItemRepository extends JpaRepository<OrderItem,Long> {
     @Query("SELECT d FROM OrderItem d join Cart c ON d.cart.id = c.id WHERE d.shop = ?1 AND c.idUser = ?2 ")
     Iterable<OrderItem> findAllByShopAndCart(Shop shop, User user);
+    OrderItem findOrderItemByProduct(Product product);
+
 }

@@ -1,9 +1,6 @@
 package com.example.shopeefood.service.orderItem;
 
-import com.example.shopeefood.model.DetailCart;
-import com.example.shopeefood.model.OrderItem;
-import com.example.shopeefood.model.Shop;
-import com.example.shopeefood.model.User;
+import com.example.shopeefood.model.*;
 import com.example.shopeefood.repository.IDetailCartRepository;
 import com.example.shopeefood.repository.IOrderItemRepository;
 import com.example.shopeefood.service.detailcart.IDetailCartService;
@@ -39,6 +36,11 @@ public class OrderServicer implements IOrderItemService {
     @Override
     public Iterable<OrderItem> findAllByShopAndCart(Shop shop, User user) {
         return iOrderItemRepository.findAllByShopAndCart(shop,user);
+    }
+
+    @Override
+    public OrderItem findOrderItemByProduct(Product product) {
+        return iOrderItemRepository.findOrderItemByProduct(product);
     }
 
 }

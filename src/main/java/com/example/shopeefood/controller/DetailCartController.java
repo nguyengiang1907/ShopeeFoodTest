@@ -46,11 +46,8 @@ public class DetailCartController {
         Optional<User> user = iUserService.findById(idUser);
         Optional<Shop> shop = iShopService.findById(idShop);
         List<DetailCart> detailCarts = (List<DetailCart>) iDetailCartService.findAllByShopAndCart(shop.get(),user.get());
-        if (detailCarts.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else {
             return new ResponseEntity<>(detailCarts, HttpStatus.OK);
-        }
+
     }
     @PostMapping("/{idUser}/{idShop}/{idProduct}")
     public ResponseEntity<DetailCart> saveDetailCart(@PathVariable long idShop, @PathVariable long idUser, @PathVariable Long idProduct) {
@@ -59,12 +56,29 @@ public class DetailCartController {
         Optional<Cart> cart = iCartService.findById(idUser);
         LocalDateTime currentDateTime = LocalDateTime.now();
         cart.get().setCreatedAt(currentDateTime);
-        DetailCart detailCart = new DetailCart(product.get(),1,shop.get(),cart.get());
-        OrderItem orderItem = new OrderItem(detailCart.getId(),product.get(),1,shop.get(),cart.get());
-        iDetailCartService.save(detailCart);
-        iOrderItemService.save(orderItem);
-        return new ResponseEntity<>(detailCart, HttpStatus.CREATED);
-    }
+        DetailCart detailCart = iDetailCartService.findDetailCartByProduct(product.get());
+        if (detailCart == null) {
+            DetailCart newDetailCart = new DetailCart(product.get(), 1, shop.get(), cart.get());
+            newDetailCart = iDetailCartService.save(newDetailCart);
+            Long id =newDetailCart.getId();
+            OrderItem orderItem = new OrderItem(id, product.get(), 1, shop.get(), cart.get());
+            iOrderItemService.save(orderItem);
+            return new ResponseEntity<>(newDetailCart, HttpStatus.CREATED);
+        } else {
+
+                int newQuantity = detailCart.getQuantity() + 1;
+                detailCart.setQuantity(newQuantity);
+                detailCart =   iDetailCartService.save(detailCart);
+                OrderItem updatedOrderItem = new OrderItem(detailCart.getId(),
+                        detailCart.getProduct(),
+                        detailCart.getQuantity(),
+                        detailCart.getShop(),
+                        detailCart.getCart());
+                iOrderItemService.save(updatedOrderItem);
+            }
+            return new ResponseEntity<>(detailCart, HttpStatus.OK);
+        }
+//    }
     @PutMapping("/plus/{id}")
     public ResponseEntity<DetailCart> plusCart(@PathVariable Long id) {
         Optional<DetailCart>  detailCart=  idetailCartRepository.findById(id);

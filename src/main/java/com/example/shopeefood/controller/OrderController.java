@@ -34,6 +34,7 @@ public class OrderController {
 
     @PostMapping("/{idUser}/{idShop}")
     public ResponseEntity<Order> createOrder(@PathVariable long idShop, @PathVariable long idUser) {
+
         Optional<User> userOptional = iUserService.findById(idUser);
         Optional<Shop> shopOptional = iShopService.findById(idShop);
         if (!userOptional.isPresent() || !shopOptional.isPresent()) {
@@ -47,10 +48,11 @@ public class OrderController {
         if (orderItems.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-
         Order order = new Order();
         for (OrderItem item : orderItems) {
-            order.addOrderItem(item);
+            if(item.getOrder()==null){
+                order.addOrderItem(item);
+            }
         }
         Order savedOrder = iOrderRepository.save(order);
         for (OrderItem orderItem : orderItems){

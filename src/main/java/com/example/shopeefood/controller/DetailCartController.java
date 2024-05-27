@@ -65,10 +65,9 @@ public class DetailCartController {
             iOrderItemService.save(orderItem);
             return new ResponseEntity<>(newDetailCart, HttpStatus.CREATED);
         } else {
-
                 int newQuantity = detailCart.getQuantity() + 1;
                 detailCart.setQuantity(newQuantity);
-                detailCart =   iDetailCartService.save(detailCart);
+                detailCart = iDetailCartService.save(detailCart);
                 OrderItem updatedOrderItem = new OrderItem(detailCart.getId(),
                         detailCart.getProduct(),
                         detailCart.getQuantity(),

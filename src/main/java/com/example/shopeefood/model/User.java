@@ -2,6 +2,9 @@ package com.example.shopeefood.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Table(name = "users")
@@ -18,6 +21,7 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role idRole;
+
 
 
     public long getId() {

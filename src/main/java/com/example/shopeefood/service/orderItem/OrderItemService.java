@@ -1,16 +1,14 @@
 package com.example.shopeefood.service.orderItem;
 
 import com.example.shopeefood.model.*;
-import com.example.shopeefood.repository.IDetailCartRepository;
 import com.example.shopeefood.repository.IOrderItemRepository;
-import com.example.shopeefood.service.detailcart.IDetailCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class OrderServicer implements IOrderItemService {
+public class OrderItemService implements IOrderItemService {
     @Autowired
     private IOrderItemRepository iOrderItemRepository;
     @Override

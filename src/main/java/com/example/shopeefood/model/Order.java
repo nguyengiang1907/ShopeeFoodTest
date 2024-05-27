@@ -32,8 +32,19 @@ public class Order {
     @ToString.Exclude
     private List<OrderItem> orderItems = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private Status status;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
         orderItem.setOrder(this);
+    }
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

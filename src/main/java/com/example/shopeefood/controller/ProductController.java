@@ -71,5 +71,17 @@ public class ProductController {
             return new ResponseEntity<>(null, HttpStatus.CREATED) ;
         }
     }
+    @PutMapping("{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isPresent()) {
+            Product existingProduct = product.get();
+            existingProduct.setStatus(productDetails.getStatus());
+            productRepository.save(existingProduct);
+            return new ResponseEntity<>(existingProduct, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
 

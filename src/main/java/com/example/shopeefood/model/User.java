@@ -1,13 +1,14 @@
 package com.example.shopeefood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +22,29 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role idRole;
+    @ManyToMany(mappedBy = "users")
+    @JsonIgnore
+    private Set<Product> products;
 
+    public User(long id, String name, String password, String email, String phoneNumber, String image, boolean status, Role idRole, Set<Product> products) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.image = image;
+        this.status = status;
+        this.idRole = idRole;
+        this.products = products;
+    }
 
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
 
     public long getId() {
         return id;

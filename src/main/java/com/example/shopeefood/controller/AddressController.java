@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("address")
 public class AddressController {
@@ -17,6 +19,11 @@ public class AddressController {
     private IAddressRepository iAddressRepository;
     @Autowired
     private IUserService iUserService;
+    @GetMapping({"/{idUser}"})
+    private  ResponseEntity<List<Address>> showAddress(@PathVariable Long idUser){
+   List<Address> addressList = iAddressRepository.findAllByUserId(idUser);
+   return new ResponseEntity<>(addressList,HttpStatus.OK);
+    }
     @PostMapping("/{idUser}")
     private ResponseEntity<Address> addAddress(@PathVariable Long idUser, @RequestBody Address address){
         User user = iUserService.findById(idUser).get();

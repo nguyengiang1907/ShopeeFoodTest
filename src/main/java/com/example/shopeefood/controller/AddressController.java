@@ -17,12 +17,16 @@ public class AddressController {
     private IAddressRepository iAddressRepository;
     @Autowired
     private IUserService iUserService;
-    @GetMapping("/{idUser}")
- private ResponseEntity<Address> addAddress(@PathVariable Long idUser, @RequestBody Address address){
-
-     User user = iUserService.findById(idUser).get();
-     address.setUser(user);
+    @PostMapping("/{idUser}")
+    private ResponseEntity<Address> addAddress(@PathVariable Long idUser, @RequestBody Address address){
+        User user = iUserService.findById(idUser).get();
+        address.setUser(user);
         address= iAddressRepository.save(address);
-     return new ResponseEntity<>(address, HttpStatus.CREATED);
+        return new ResponseEntity<>(address, HttpStatus.CREATED);
+    }
+    @PutMapping()
+    private ResponseEntity<Address> updateAddress( @RequestBody Address address){
+        address= iAddressRepository.save(address);
+        return new ResponseEntity<>(address, HttpStatus.CREATED);
     }
 }

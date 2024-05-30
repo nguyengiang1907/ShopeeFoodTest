@@ -72,7 +72,6 @@ public class OrderController {
 
     @PostMapping("/{idUser}/{idShop}")
     public ResponseEntity<Order> createOrder(@PathVariable long idShop, @PathVariable long idUser) {
-
         Optional<User> userOptional = iUserService.findById(idUser);
         Optional<Shop> shopOptional = iShopService.findById(idShop);
         if (!userOptional.isPresent() || !shopOptional.isPresent()) {
@@ -86,16 +85,23 @@ public class OrderController {
         if (orderItems.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+
+        Optional<Status> statusOptional = iStatusRepository.findById(1L);
+        if (!statusOptional.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+
         Order order = new Order();
-        order.setStatus(iStatusRepository.findById(1L).get());
+        order.setStatus(statusOptional.get());
         order.setUser(user);
         for (OrderItem item : orderItems) {
-            if(item.getOrder()==null){
+            if (item.getOrder() == null) {
                 order.addOrderItem(item);
             }
         }
+
         Order savedOrder = iOrderRepository.save(order);
-        for (OrderItem orderItem : orderItems){
+        for (OrderItem orderItem : orderItems) {
             iDetailCartService.remove(orderItem.getId());
         }
         return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);

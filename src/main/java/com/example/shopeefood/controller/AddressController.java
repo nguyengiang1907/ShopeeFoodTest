@@ -38,4 +38,9 @@ public class AddressController {
         address= iAddressRepository.save(address);
         return new ResponseEntity<>(address, HttpStatus.CREATED);
     }
+    @DeleteMapping("/{idAddress}")
+    public ResponseEntity<Order> deleteOrder(@PathVariable long idAddress) {
+        iAddressRepository.deleteById(idAddress);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -119,7 +119,6 @@ public class ProductController {
             Product product = new Product(
                     productFile.getId(),
                     productFile.getName(),
-                    productFile.getPrice(),
                     productFile.getQuantity(),
                     fileName,
                     productFile.getDetail(),

@@ -1,8 +1,10 @@
 package com.example.shopeefood.controller;
 
 import com.example.shopeefood.model.*;
-import com.example.shopeefood.repository.*;
-import com.example.shopeefood.service.address.IAddressService;
+import com.example.shopeefood.repository.IDetailCartRepository;
+import com.example.shopeefood.repository.IOrderItemRepository;
+import com.example.shopeefood.repository.IOrderRepository;
+import com.example.shopeefood.repository.IStatusRepository;
 import com.example.shopeefood.service.detailcart.IDetailCartService;
 import com.example.shopeefood.service.orderItem.IOrderItemService;
 import com.example.shopeefood.service.shop.IShopService;
@@ -34,8 +36,6 @@ public class OrderController {
     private IStatusRepository iStatusRepository;
     @Autowired
     private IOrderItemRepository iOrderItemRepository;
-    @Autowired
-    private IAddressService iAddressService;
 
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrderItemsByOrderId(@PathVariable long orderId) {
@@ -70,47 +70,34 @@ public class OrderController {
         return new ResponseEntity<>(iOrderRepository.findByUserId(userId),HttpStatus.OK);
     }
 
-    @PostMapping("/{idUser}/{idShop}/{idAddress}")
-    public ResponseEntity<Order> createOrder(@PathVariable long idShop, @PathVariable long idUser, @PathVariable long idAddress, @RequestBody String note) {
+    @PostMapping("/{idUser}/{idShop}")
+    public ResponseEntity<Order> createOrder(@PathVariable long idShop, @PathVariable long idUser) {
+
         Optional<User> userOptional = iUserService.findById(idUser);
         Optional<Shop> shopOptional = iShopService.findById(idShop);
-        Optional<Address> addressOptional = iAddressService.findById(idAddress);
-
-        if (!userOptional.isPresent() || !shopOptional.isPresent() || !addressOptional.isPresent()) {
+        if (!userOptional.isPresent() || !shopOptional.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
 
         User user = userOptional.get();
         Shop shop = shopOptional.get();
-        Address address = addressOptional.get();
 
         List<OrderItem> orderItems = (List<OrderItem>) iOrderItemService.findAllByShopAndCart(shop, user);
         if (orderItems.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-
-        Optional<Status> statusOptional = iStatusRepository.findById(1L);
-        if (!statusOptional.isPresent()) {
-            return ResponseEntity.badRequest().build();
-        }
-
         Order order = new Order();
-        order.setStatus(statusOptional.get());
+        order.setStatus(iStatusRepository.findById(1L).get());
         order.setUser(user);
-        order.setAddress(address);
         for (OrderItem item : orderItems) {
-            if (item.getOrder() == null) {
-                item.setNote(note);
+            if(item.getOrder()==null){
                 order.addOrderItem(item);
             }
         }
-
         Order savedOrder = iOrderRepository.save(order);
-        for (OrderItem orderItem : orderItems) {
+        for (OrderItem orderItem : orderItems){
             iDetailCartService.remove(orderItem.getId());
         }
-
         return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
     }
-
 }

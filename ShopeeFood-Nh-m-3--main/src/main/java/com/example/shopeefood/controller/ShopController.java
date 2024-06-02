@@ -27,6 +27,7 @@ import java.util.Optional;
 public class ShopController {
     @Autowired
     private IShopService iShopService;
+    @Value("E:\\java\\ShopeeFood\\src\\main\\resources\\static\\img\\")
     private String fileUpload;
     public MultipartFile multipartFile;
     @ExceptionHandler({Exception.class})

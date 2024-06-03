@@ -13,17 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("address")
+@RequestMapping("api/address")
 public class AddressController {
     @Autowired
     private IAddressRepository iAddressRepository;
     @Autowired
     private IUserService iUserService;
-    @GetMapping({"/{idUser}"})
-    private  ResponseEntity<List<Address>> showAddress(@PathVariable Long idUser){
-   List<Address> addressList = iAddressRepository.findAllByUserId(idUser);
-   return new ResponseEntity<>(addressList,HttpStatus.OK);
-    }
+
     @PostMapping("/{idUser}")
     private ResponseEntity<Address> addAddress(@PathVariable Long idUser, @RequestBody Address address){
         User user = iUserService.findById(idUser).get();
@@ -31,9 +27,23 @@ public class AddressController {
         address= iAddressRepository.save(address);
         return new ResponseEntity<>(address, HttpStatus.CREATED);
     }
-    @PutMapping()
-    private ResponseEntity<Address> updateAddress( @RequestBody Address address){
+
+    @GetMapping({"/{idUser}"})
+    private  ResponseEntity<List<Address>> showAddress(@PathVariable Long idUser){
+        List<Address> addressList = iAddressRepository.findAllByUserId(idUser);
+        return new ResponseEntity<>(addressList,HttpStatus.OK);
+    }
+
+    @PutMapping("{idAddress}")
+    private ResponseEntity<Address> updateAddress( @PathVariable long idAddress,@RequestBody Address address){
+        address.setId(idAddress);
         address= iAddressRepository.save(address);
         return new ResponseEntity<>(address, HttpStatus.CREATED);
+    }
+    @DeleteMapping("/{idAddress}")
+    public ResponseEntity<Order> deleteOrder(@PathVariable long idAddress) {
+        iAddressRepository.deleteById(idAddress);
+        return ResponseEntity.ok().build();
+
     }
 }

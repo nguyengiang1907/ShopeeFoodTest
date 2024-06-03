@@ -77,6 +77,16 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
+    public Product(long id, String name, double price, String image, String detail, Set<Menu> menus, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.image = image;
+        this.detail = detail;
+        this.menus = menus;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 
     public long getId() {
         return id;

@@ -106,7 +106,9 @@ public class OrderController {
         }
 
         Order savedOrder = iOrderRepository.save(order);
+
         for (OrderItem orderItem : orderItems) {
+
             iDetailCartService.remove(orderItem.getId());
         }
 

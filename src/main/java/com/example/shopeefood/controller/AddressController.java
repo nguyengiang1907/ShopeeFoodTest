@@ -19,6 +19,7 @@ public class AddressController {
     private IAddressRepository iAddressRepository;
     @Autowired
     private IUserService iUserService;
+
     @PostMapping("/{idUser}")
     private ResponseEntity<Address> addAddress(@PathVariable Long idUser, @RequestBody Address address){
         User user = iUserService.findById(idUser).get();

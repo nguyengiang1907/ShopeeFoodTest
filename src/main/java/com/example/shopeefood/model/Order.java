@@ -39,6 +39,9 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @ManyToOne
+    @JoinColumn(name="address_id")
+    private Address address;
 
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);

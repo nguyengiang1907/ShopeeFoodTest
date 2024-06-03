@@ -10,7 +10,7 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private int status;
     private String address;
     private String phoneNumber;
     private String nameUser;
@@ -25,7 +25,14 @@ public class Address {
         this.nameUser = nameUser;
     }
 
-    public Address() {
+    public Address(Long id, int status, String address, String phoneNumber, String nameUser) {
+        this.id = id;
+        this.status = status;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.nameUser = nameUser;
+    }
 
+    public Address() {
     }
 }

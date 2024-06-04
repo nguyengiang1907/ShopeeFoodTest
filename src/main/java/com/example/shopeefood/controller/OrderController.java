@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,14 @@ public class OrderController {
         return  new ResponseEntity<>(iOrderRepository.findById(orderId).get(), HttpStatus.OK);
 
     }
+
+    @GetMapping("/orderByShip")
+    public ResponseEntity<List<Order>> getOrderByShip() {
+        List<Order> orderList = iOrderRepository.findByStatusId(2);
+        Collections.reverse(orderList);
+            return new ResponseEntity<>(orderList, HttpStatus.OK);
+
+    }
     @GetMapping("/orderItem/{orderId}")
     public ResponseEntity<List<OrderItem>> getOrderItemByOrderId(@PathVariable long orderId) {
         List<OrderItem> orderItems = iOrderItemService.findByOrderId(orderId);
@@ -76,12 +85,16 @@ public class OrderController {
     }
 
     @GetMapping("/orders/shop/{shopId}")
-    public List<Order> getOrdersByShopId(@PathVariable long shopId) {
-        return iOrderRepository.findByOrderItems_Shop_Id(shopId);
+    public ResponseEntity<List<Order>> getOrdersByShopId(@PathVariable long shopId) {
+        List<Order> orderList = iOrderRepository.findByOrderItems_Shop_Id(shopId);
+        Collections.reverse(orderList);
+        return new ResponseEntity<>(orderList,HttpStatus.OK);
     }
     @GetMapping("/orders/user/{userId}")
     public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable long userId) {
-        return new ResponseEntity<>(iOrderRepository.findByUserId(userId),HttpStatus.OK);
+        List<Order> orderList = iOrderRepository.findByUserId(userId);
+        Collections.reverse(orderList);
+        return new ResponseEntity<>(orderList,HttpStatus.OK);
     }
 
     @GetMapping("/status/{statusId}")

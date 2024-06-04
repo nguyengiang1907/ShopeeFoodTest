@@ -32,7 +32,9 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
-    @Value("/home/dang/ShopeeFood-Nh-m-3-/src/main/resources/static/img/")
+
+    @Value("E:\\java\\ShopeeFood-Nh-m-3--main\\src\\main\\resources\\static\\img\\")
+
 
     private String fileUpload;
     @Autowired
@@ -109,12 +111,10 @@ public class ProductController {
     @PostMapping()
     public ResponseEntity<Product> saveProduct(@ModelAttribute ProductFile productFile) {
         try {
-
+            LocalDateTime localDateTime = LocalDateTime.now();
             MultipartFile multipartFile = productFile.getImage();
             String fileName = multipartFile.getOriginalFilename();
             FileCopyUtils.copy(productFile.getImage().getBytes(), new File(fileUpload + fileName));
-
-            LocalDateTime localDateTime = LocalDateTime.now();
 
             Product product = new Product(
                     productFile.getId(),

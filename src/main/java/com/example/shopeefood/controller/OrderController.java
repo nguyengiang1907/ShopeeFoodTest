@@ -14,10 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -56,6 +53,23 @@ public class OrderController {
             return new ResponseEntity<>(orderList, HttpStatus.OK);
 
     }
+    @GetMapping("/orderReceived")
+    public ResponseEntity<List<Order>> getOrderReceived() {
+        List<Order> orderList = new ArrayList<>();
+        List<Order> orderList1 = iOrderRepository.findByStatusId(4);
+        Collections.reverse(orderList1);
+        orderList.addAll(orderList1);
+        List<Order> orderList2 = iOrderRepository.findByStatusId(6);
+        Collections.reverse(orderList2);
+        orderList.addAll(orderList2);
+        List<Order> orderList3 = iOrderRepository.findByStatusId(7);
+        Collections.reverse(orderList3);
+        orderList.addAll(orderList3);
+
+        return new ResponseEntity<>(orderList, HttpStatus.OK);
+
+    }
+
     @GetMapping("/orderItem/{orderId}")
     public ResponseEntity<List<OrderItem>> getOrderItemByOrderId(@PathVariable long orderId) {
         List<OrderItem> orderItems = iOrderItemService.findByOrderId(orderId);

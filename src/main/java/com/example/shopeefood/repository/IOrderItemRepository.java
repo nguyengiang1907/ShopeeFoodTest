@@ -13,5 +13,7 @@ public interface IOrderItemRepository extends JpaRepository<OrderItem,Long> {
     Iterable<OrderItem> findAllByShopAndCart(Shop shop, User user);
     OrderItem findOrderItemByProduct(Product product);
     List<OrderItem> findByOrderId(long orderId);
+    List<OrderItem> findOrderItemByOrderId(long orderId);
+
 
 }

@@ -20,6 +20,12 @@ public class AddressController {
     @Autowired
     private IUserService iUserService;
 
+    @GetMapping("/address/{idAddress}")
+    private  ResponseEntity<Address> showAddressById(@PathVariable Long idAddress){
+        Address address = iAddressRepository.findById(idAddress).get();
+        return new ResponseEntity<>(address,HttpStatus.OK);
+    }
+
     @PostMapping("/{idUser}")
     private ResponseEntity<Address> addAddress(@PathVariable Long idUser, @RequestBody Address address){
         User user = iUserService.findById(idUser).get();

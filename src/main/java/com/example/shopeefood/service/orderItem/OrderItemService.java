@@ -5,6 +5,7 @@ import com.example.shopeefood.repository.IOrderItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,6 +40,10 @@ public class OrderItemService implements IOrderItemService {
     @Override
     public OrderItem findOrderItemByProduct(Product product) {
         return iOrderItemRepository.findOrderItemByProduct(product);
+    }
+    @Override
+    public List<OrderItem> findByOrderId(long idOrder) {
+        return iOrderItemRepository.findOrderItemByOrderId(idOrder);
     }
 
 }

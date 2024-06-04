@@ -22,7 +22,6 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role idRole;
-
     @ManyToMany(mappedBy = "users")
     @JsonIgnore
     private Set<Product> products;
@@ -110,8 +109,6 @@ public class User {
     public void setIdRole(Role idRole) {
         this.idRole = idRole;
     }
-
-
 
     public User(long id, String name, String email, String password, String phoneNumber, String image, boolean status, Role idRole) {
         this.id = id;

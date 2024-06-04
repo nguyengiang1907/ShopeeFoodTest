@@ -38,10 +38,11 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     @JsonIgnore
     private Order order;
-
-
+   
     public OrderItem() {
     }
+
+
     public OrderItem(long id, Product product, Shop shop, int quantity, Cart cart, Order order, String note) {
         this.id = id;
         this.product = product;
@@ -52,11 +53,12 @@ public class OrderItem {
         this.note = note;
     }
 
-    public OrderItem(Long id,Product product, int quantity, Shop shop, Cart cart) {
+    public OrderItem(Long id, Product product, int quantity, Shop shop, Cart cart) {
         this.id = id;
         this.product = product;
         this.quantity = quantity;
         this.shop = shop;
         this.cart = cart;
     }
+
 }

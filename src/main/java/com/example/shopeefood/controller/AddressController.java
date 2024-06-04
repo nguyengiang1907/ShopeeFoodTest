@@ -19,11 +19,13 @@ public class AddressController {
     private IAddressRepository iAddressRepository;
     @Autowired
     private IUserService iUserService;
+
     @GetMapping("/address/{idAddress}")
     private  ResponseEntity<Address> showAddressById(@PathVariable Long idAddress){
         Address address = iAddressRepository.findById(idAddress).get();
         return new ResponseEntity<>(address,HttpStatus.OK);
     }
+
     @PostMapping("/{idUser}")
     private ResponseEntity<Address> addAddress(@PathVariable Long idUser, @RequestBody Address address){
         User user = iUserService.findById(idUser).get();
@@ -31,6 +33,7 @@ public class AddressController {
         address= iAddressRepository.save(address);
         return new ResponseEntity<>(address, HttpStatus.CREATED);
     }
+
     @GetMapping({"/{idUser}"})
     private  ResponseEntity<List<Address>> showAddress(@PathVariable Long idUser){
         List<Address> addressList = iAddressRepository.findAllByUserId(idUser);
@@ -47,5 +50,6 @@ public class AddressController {
     public ResponseEntity<Order> deleteOrder(@PathVariable long idAddress) {
         iAddressRepository.deleteById(idAddress);
         return ResponseEntity.ok().build();
+
     }
 }

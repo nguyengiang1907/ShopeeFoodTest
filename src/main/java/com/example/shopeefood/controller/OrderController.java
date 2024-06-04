@@ -2,6 +2,9 @@ package com.example.shopeefood.controller;
 
 import com.example.shopeefood.model.*;
 import com.example.shopeefood.repository.*;
+
+import com.example.shopeefood.service.address.IAddressService;
+
 import com.example.shopeefood.service.detailcart.IDetailCartService;
 import com.example.shopeefood.service.orderItem.IOrderItemService;
 import com.example.shopeefood.service.shop.IShopService;
@@ -36,6 +39,9 @@ public class OrderController {
     private IOrderItemRepository iOrderItemRepository;
     @Autowired
     private IAddressRepository iAddressRepository;
+
+  
+
 
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrderItemsByOrderId(@PathVariable long orderId) {
@@ -96,11 +102,14 @@ public class OrderController {
         return new ResponseEntity<>(iOrderRepository.findByStatusId(statusId),HttpStatus.OK);
     }
 
+
     @PostMapping("/{idUser}/{idShop}/{idAddress}")
     public ResponseEntity<Order> createOrder(@PathVariable long idShop, @PathVariable long idUser, @PathVariable long idAddress, @RequestBody String note) {
         Optional<User> userOptional = iUserService.findById(idUser);
         Optional<Shop> shopOptional = iShopService.findById(idShop);
+
         Optional<Address> addressOptional = iAddressRepository.findById(idAddress);
+
 
         if (!userOptional.isPresent() || !shopOptional.isPresent() || !addressOptional.isPresent()) {
             return ResponseEntity.badRequest().build();
@@ -131,8 +140,10 @@ public class OrderController {
             }
         }
 
+
         Order savedOrder = iOrderRepository.save(order);
         for (OrderItem orderItem : orderItems) {
+
             iDetailCartService.remove(orderItem.getId());
         }
 

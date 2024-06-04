@@ -32,7 +32,9 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
+
     @Value("E:\\java\\ShopeeFood-Nh-m-3--main\\src\\main\\resources\\static\\img\\")
+
 
     private String fileUpload;
     @Autowired

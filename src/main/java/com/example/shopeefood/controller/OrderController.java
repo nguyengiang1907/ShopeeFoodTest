@@ -36,15 +36,15 @@ public class OrderController {
     private IOrderItemRepository iOrderItemRepository;
     @Autowired
     private IAddressRepository iAddressRepository;
-
-  
-
+    @Autowired
+    private IAddressOrderRepository addressOrderRepository;
 
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrderItemsByOrderId(@PathVariable long orderId) {
         return  new ResponseEntity<>(iOrderRepository.findById(orderId).get(), HttpStatus.OK);
 
     }
+
 
     @GetMapping("/orderByShip")
     public ResponseEntity<List<Order>> getOrderByShip() {
@@ -117,6 +117,8 @@ public class OrderController {
     }
 
 
+
+
     @PostMapping("/{idUser}/{idShop}/{idAddress}")
     public ResponseEntity<Order> createOrder(@PathVariable long idShop, @PathVariable long idUser, @PathVariable long idAddress, @RequestBody String note) {
         Optional<User> userOptional = iUserService.findById(idUser);
@@ -125,14 +127,12 @@ public class OrderController {
         Optional<Address> addressOptional = iAddressRepository.findById(idAddress);
 
 
-        if (!userOptional.isPresent() || !shopOptional.isPresent() || !addressOptional.isPresent()) {
-            return ResponseEntity.badRequest().build();
-        }
+        Address addressOptional = iAddressRepository.findById(idAddress).get();
 
         User user = userOptional.get();
         Shop shop = shopOptional.get();
-        Address address = addressOptional.get();
-
+        AddressOrder address = new AddressOrder(addressOptional.getPhoneNumber(), addressOptional.getAddress(),addressOptional.getNameUser());
+        addressOrderRepository.save(address);
         List<OrderItem> orderItems = (List<OrderItem>) iOrderItemService.findAllByShopAndCart(shop, user);
         if (orderItems.isEmpty()) {
             return ResponseEntity.badRequest().build();
@@ -146,7 +146,7 @@ public class OrderController {
         Order order = new Order();
         order.setStatus(statusOptional.get());
         order.setUser(user);
-        order.setAddress(address);
+        order.setAddressOrder(address);
         for (OrderItem item : orderItems) {
             if (item.getOrder() == null) {
                 item.setNote(note);

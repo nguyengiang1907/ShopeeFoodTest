@@ -40,8 +40,7 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne
-    @JoinColumn(name="address_id")
-    private Address address;
+    private AddressOrder AddressOrder;
 
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);

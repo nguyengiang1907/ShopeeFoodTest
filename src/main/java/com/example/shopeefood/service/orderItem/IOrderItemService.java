@@ -9,4 +9,4 @@ public interface IOrderItemService extends IGenerateService<OrderItem> {
     Iterable<OrderItem> findAllByShopAndCart(Shop shop, User user);
     OrderItem findOrderItemByProduct(Product product);
     List<OrderItem> findByOrderId(long idOrder);
-}
+

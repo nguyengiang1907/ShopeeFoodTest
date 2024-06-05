@@ -25,7 +25,7 @@ public class OrderItem {
 
     @Column(nullable = false)
     private int quantity;
-
+    private String note;
     @ManyToOne
     @JoinColumn(name = "shop_id", nullable = false)
     private Shop shop;
@@ -38,9 +38,10 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     @JsonIgnore
     private Order order;
-    private String note;
+   
     public OrderItem() {
     }
+
 
     public OrderItem(long id, Product product, Shop shop, int quantity, Cart cart, Order order, String note) {
         this.id = id;

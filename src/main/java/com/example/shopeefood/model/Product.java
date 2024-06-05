@@ -183,4 +183,3 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 }
-

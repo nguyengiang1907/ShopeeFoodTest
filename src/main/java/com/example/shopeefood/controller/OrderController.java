@@ -107,7 +107,17 @@ public class OrderController {
 
     @GetMapping("/status/{statusId}")
     public ResponseEntity<List<Order>> getOrdersByStatusId(@PathVariable long statusId) {
-        return new ResponseEntity<>(iOrderRepository.findByStatusId(statusId),HttpStatus.OK);
+        if(statusId==1L){
+            List<Order> orderList =iOrderRepository.findAll();
+            Collections.reverse(orderList);
+            return new ResponseEntity<>(orderList,HttpStatus.OK);
+        }
+        else {
+            List<Order> orderList =iOrderRepository.findByStatusId(statusId);
+            Collections.reverse(orderList);
+            return new ResponseEntity<>(orderList,HttpStatus.OK);
+        }
+
     }
 
     @PostMapping("/{idUser}/{idShop}/{idAddress}")

@@ -124,9 +124,6 @@ public class OrderController {
         Optional<User> userOptional = iUserService.findById(idUser);
         Optional<Shop> shopOptional = iShopService.findById(idShop);
 
-        Optional<Address> addressOptional = iAddressRepository.findById(idAddress);
-
-
         Address addressOptional = iAddressRepository.findById(idAddress).get();
 
         User user = userOptional.get();

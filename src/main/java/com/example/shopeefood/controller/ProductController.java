@@ -126,7 +126,8 @@ public class ProductController {
                     productFile.getMenus(),
                     localDateTime,
                     localDateTime);
-            product.setStatus(0);
+            product.setStatus(1);
+
             product = iProductService.save(product);
             Set<Menu> menuSet = new HashSet<>();
             product.setMenus(menuSet);

@@ -130,12 +130,9 @@ public class OrderController {
 
 
     @PostMapping("/{idUser}/{idShop}/{idAddress}")
-    public ResponseEntity<Order> createOrder(@PathVariable long idShop, @PathVariable long idUser, @PathVariable long idAddress, @RequestBody String note) {
+    public ResponseEntity<Order> createOrder(@PathVariable long idUser,@PathVariable long idShop,  @PathVariable long idAddress, @RequestBody String note) {
         Optional<User> userOptional = iUserService.findById(idUser);
         Optional<Shop> shopOptional = iShopService.findById(idShop);
-
-        Optional<Address> addressOptional = iAddressRepository.findById(idAddress);
-
 
         Address addressOptional = iAddressRepository.findById(idAddress).get();
 

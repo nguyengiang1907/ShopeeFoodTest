@@ -30,7 +30,9 @@ public class ShopController {
     private IShopService iShopService;
     @Autowired
     private IShopRepository shopRepository;
+
     @Value("E:\\java\\ShopeeFood-Nh-m-3--main\\src\\main\\resources\\static\\img\\")
+
     private String fileUpload;
     public MultipartFile multipartFile;
     @ExceptionHandler({Exception.class})

@@ -10,6 +10,9 @@ public interface IOrderItemService extends IGenerateService<OrderItem> {
 
     OrderItem findOrderItemByProduct(Product product);
 
+
+    List<OrderItem> findByOrderId(long idOrder);
+
+
     List<OrderItem> findByOrderId(long idOrder);
 }
-

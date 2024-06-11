@@ -56,12 +56,13 @@ public class OrderController {
     @GetMapping("/orderReceived")
     public ResponseEntity<List<Order>> getOrderReceived() {
         List<Order> orderList = new ArrayList<>();
-        List<Order> orderList1 = iOrderRepository.findByStatusId(4);
-        Collections.reverse(orderList1);
-        orderList.addAll(orderList1);
         List<Order> orderList2 = iOrderRepository.findByStatusId(6);
         Collections.reverse(orderList2);
         orderList.addAll(orderList2);
+        List<Order> orderList1 = iOrderRepository.findByStatusId(4);
+        Collections.reverse(orderList1);
+        orderList.addAll(orderList1);
+
         List<Order> orderList3 = iOrderRepository.findByStatusId(7);
         Collections.reverse(orderList3);
         orderList.addAll(orderList3);

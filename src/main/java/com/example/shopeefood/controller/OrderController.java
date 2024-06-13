@@ -7,7 +7,6 @@ import com.example.shopeefood.service.address.IAddressService;
 
 import com.example.shopeefood.service.detailcart.IDetailCartService;
 import com.example.shopeefood.service.orderItem.IOrderItemService;
-import com.example.shopeefood.service.product.IProductService;
 import com.example.shopeefood.service.shop.IShopService;
 import com.example.shopeefood.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +38,6 @@ public class OrderController {
     private IAddressRepository iAddressRepository;
     @Autowired
     private IAddressOrderRepository addressOrderRepository;
-    @Autowired
-    private IProductService iProductService;
-    @Autowired
-    private IProductRepository iProductRepository;
-
 
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrderItemsByOrderId(@PathVariable long orderId) {
@@ -62,13 +56,12 @@ public class OrderController {
     @GetMapping("/orderReceived")
     public ResponseEntity<List<Order>> getOrderReceived() {
         List<Order> orderList = new ArrayList<>();
-        List<Order> orderList2 = iOrderRepository.findByStatusId(6);
-        Collections.reverse(orderList2);
-        orderList.addAll(orderList2);
         List<Order> orderList1 = iOrderRepository.findByStatusId(4);
         Collections.reverse(orderList1);
         orderList.addAll(orderList1);
-
+        List<Order> orderList2 = iOrderRepository.findByStatusId(6);
+        Collections.reverse(orderList2);
+        orderList.addAll(orderList2);
         List<Order> orderList3 = iOrderRepository.findByStatusId(7);
         Collections.reverse(orderList3);
         orderList.addAll(orderList3);
@@ -87,34 +80,22 @@ public class OrderController {
         }
     }
     @PutMapping("/status/{idOrder}/{statusId}")
-    public ResponseEntity<?> setStatus(@PathVariable long idOrder, @PathVariable long statusId) {
+    public ResponseEntity<Order> setStatus(@PathVariable long idOrder, @PathVariable long statusId) {
         Optional<Order> optionalOrder = iOrderRepository.findById(idOrder);
         if (!optionalOrder.isPresent()) {
             return ResponseEntity.notFound().build();
         }
+
         Optional<Status> optionalStatus = iStatusRepository.findById(statusId);
         if (!optionalStatus.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
+
         Order order = optionalOrder.get();
         Status status = optionalStatus.get();
         order.setStatus(status);
-        for (OrderItem orderItem : order.getOrderItems()) {
-            Product product = orderItem.getProduct();
-            int newQuantity = product.getQuantity() - orderItem.getQuantity();
-
-            if (newQuantity < 0) {
-                 product = iProductRepository.findById(product.getId()).get();
-                product.setStatus(0);
-                iProductRepository.save(product);
-                return ResponseEntity.badRequest().body("Không đủ số lượng: " + product.getName());
-            }
-            product.setQuantity(newQuantity);
-            iProductService.save(product);
-        }
-        Order updatedOrder = iOrderRepository.save(order);
-
-        return ResponseEntity.ok(updatedOrder);
+        iOrderRepository.save(order);
+        return ResponseEntity.ok(order);
     }
 
     @GetMapping("/orders/shop/{shopId}")
@@ -149,24 +130,29 @@ public class OrderController {
 
 
     @PostMapping("/{idUser}/{idShop}/{idAddress}")
-    public ResponseEntity<Order> createOrder(@PathVariable long idUser,@PathVariable long idShop,  @PathVariable long idAddress, @RequestBody String note) {
+    public ResponseEntity<Order> createOrder(@PathVariable long idShop, @PathVariable long idUser, @PathVariable long idAddress, @RequestBody String note) {
         Optional<User> userOptional = iUserService.findById(idUser);
         Optional<Shop> shopOptional = iShopService.findById(idShop);
 
-        Address addressOptional = iAddressRepository.findById(idAddress).get();
+        Optional<Address> addressOptional = iAddressRepository.findById(idAddress);
+
+
+        Address a = iAddressRepository.findById(idAddress).get();
 
         User user = userOptional.get();
         Shop shop = shopOptional.get();
-        AddressOrder address = new AddressOrder(addressOptional.getPhoneNumber(), addressOptional.getAddress(),addressOptional.getNameUser());
+        AddressOrder address = new AddressOrder(a.getPhoneNumber(), a.getAddress(),a.getNameUser());
         addressOrderRepository.save(address);
         List<OrderItem> orderItems = (List<OrderItem>) iOrderItemService.findAllByShopAndCart(shop, user);
         if (orderItems.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+
         Optional<Status> statusOptional = iStatusRepository.findById(1L);
         if (!statusOptional.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
+
         Order order = new Order();
         order.setStatus(statusOptional.get());
         order.setUser(user);
@@ -177,6 +163,8 @@ public class OrderController {
                 order.addOrderItem(item);
             }
         }
+
+
         Order savedOrder = iOrderRepository.save(order);
         for (OrderItem orderItem : orderItems) {
 

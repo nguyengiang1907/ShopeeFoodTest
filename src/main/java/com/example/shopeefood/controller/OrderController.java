@@ -7,6 +7,7 @@ import com.example.shopeefood.service.address.IAddressService;
 
 import com.example.shopeefood.service.detailcart.IDetailCartService;
 import com.example.shopeefood.service.orderItem.IOrderItemService;
+import com.example.shopeefood.service.product.IProductService;
 import com.example.shopeefood.service.shop.IShopService;
 import com.example.shopeefood.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,11 @@ public class OrderController {
     private IAddressRepository iAddressRepository;
     @Autowired
     private IAddressOrderRepository addressOrderRepository;
+    @Autowired
+    private IProductService iProductService;
+    @Autowired
+    private IProductRepository iProductRepository;
+
 
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrderItemsByOrderId(@PathVariable long orderId) {
@@ -80,7 +86,7 @@ public class OrderController {
             return new ResponseEntity<>(orderItems, HttpStatus.OK);
         }
     }
-   @PutMapping("/status/{idOrder}/{statusId}")
+    @PutMapping("/status/{idOrder}/{statusId}")
     public ResponseEntity<?> setStatus(@PathVariable long idOrder, @PathVariable long statusId) {
         Optional<Order> optionalOrder = iOrderRepository.findById(idOrder);
         if (!optionalOrder.isPresent()) {
@@ -157,12 +163,10 @@ public class OrderController {
         if (orderItems.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-
         Optional<Status> statusOptional = iStatusRepository.findById(1L);
         if (!statusOptional.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
-
         Order order = new Order();
         order.setStatus(statusOptional.get());
         order.setUser(user);
@@ -173,8 +177,6 @@ public class OrderController {
                 order.addOrderItem(item);
             }
         }
-
-
         Order savedOrder = iOrderRepository.save(order);
         for (OrderItem orderItem : orderItems) {
 

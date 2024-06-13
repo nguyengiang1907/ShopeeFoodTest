@@ -80,23 +80,35 @@ public class OrderController {
             return new ResponseEntity<>(orderItems, HttpStatus.OK);
         }
     }
-    @PutMapping("/status/{idOrder}/{statusId}")
-    public ResponseEntity<Order> setStatus(@PathVariable long idOrder, @PathVariable long statusId) {
+   @PutMapping("/status/{idOrder}/{statusId}")
+    public ResponseEntity<?> setStatus(@PathVariable long idOrder, @PathVariable long statusId) {
         Optional<Order> optionalOrder = iOrderRepository.findById(idOrder);
         if (!optionalOrder.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-
         Optional<Status> optionalStatus = iStatusRepository.findById(statusId);
         if (!optionalStatus.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
-
         Order order = optionalOrder.get();
         Status status = optionalStatus.get();
         order.setStatus(status);
-        iOrderRepository.save(order);
-        return ResponseEntity.ok(order);
+        for (OrderItem orderItem : order.getOrderItems()) {
+            Product product = orderItem.getProduct();
+            int newQuantity = product.getQuantity() - orderItem.getQuantity();
+
+            if (newQuantity < 0) {
+                 product = iProductRepository.findById(product.getId()).get();
+                product.setStatus(0);
+                iProductRepository.save(product);
+                return ResponseEntity.badRequest().body("Không đủ số lượng: " + product.getName());
+            }
+            product.setQuantity(newQuantity);
+            iProductService.save(product);
+        }
+        Order updatedOrder = iOrderRepository.save(order);
+
+        return ResponseEntity.ok(updatedOrder);
     }
 
     @GetMapping("/orders/shop/{shopId}")

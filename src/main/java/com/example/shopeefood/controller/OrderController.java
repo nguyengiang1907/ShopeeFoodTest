@@ -137,11 +137,11 @@ public class OrderController {
         Optional<Address> addressOptional = iAddressRepository.findById(idAddress);
 
 
-        Address addressOptional = iAddressRepository.findById(idAddress).get();
+        Address a = iAddressRepository.findById(idAddress).get();
 
         User user = userOptional.get();
         Shop shop = shopOptional.get();
-        AddressOrder address = new AddressOrder(addressOptional.getPhoneNumber(), addressOptional.getAddress(),addressOptional.getNameUser());
+        AddressOrder address = new AddressOrder(a.getPhoneNumber(), a.getAddress(),a.getNameUser());
         addressOrderRepository.save(address);
         List<OrderItem> orderItems = (List<OrderItem>) iOrderItemService.findAllByShopAndCart(shop, user);
         if (orderItems.isEmpty()) {

@@ -33,7 +33,7 @@ import java.util.Set;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    @Value("E:\\java\\ShopeeFood-Nh-m-3--main\\src\\main\\resources\\static\\img\\")
+    @Value("/home/dang/ShopeeFood-Nh-m-3-/src/main/resources/static/img/")
 
 
     private String fileUpload;
@@ -137,6 +137,15 @@ public class ProductController {
             ex.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.CREATED) ;
 
+        }
+    }
+    @GetMapping("/detailProduct/{idProduct}")
+    public ResponseEntity<Product> detailProduct(@PathVariable Long idProduct) {
+        Optional<Product> product = productRepository.findById(idProduct);
+        if (product.isPresent()) {
+            return new ResponseEntity<>(product.get(), HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

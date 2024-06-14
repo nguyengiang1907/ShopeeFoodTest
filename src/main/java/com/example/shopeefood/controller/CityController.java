@@ -1,11 +1,9 @@
 package com.example.shopeefood.controller;
 
 
-import com.example.shopeefood.model.Category;
-import com.example.shopeefood.model.City;
-import com.example.shopeefood.service.category.ICategoryService;
-import com.example.shopeefood.service.city.ICityService;
 
+import com.example.shopeefood.model.City;
+import com.example.shopeefood.service.city.ICityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

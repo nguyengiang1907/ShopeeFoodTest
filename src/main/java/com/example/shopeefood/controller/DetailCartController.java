@@ -2,7 +2,6 @@ package com.example.shopeefood.controller;
 
 import com.example.shopeefood.model.*;
 import com.example.shopeefood.repository.IDetailCartRepository;
-import com.example.shopeefood.repository.IUserRepository;
 import com.example.shopeefood.service.cart.ICartService;
 import com.example.shopeefood.service.detailcart.IDetailCartService;
 import com.example.shopeefood.service.orderItem.IOrderItemService;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

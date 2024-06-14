@@ -33,6 +33,8 @@ public class ShopController {
 
     @Value("${file.upload-dir}")
     private String fileUpload;
+
+
     public MultipartFile multipartFile;
     @ExceptionHandler({Exception.class})
     public ResponseEntity<String> handleException(Exception e) {

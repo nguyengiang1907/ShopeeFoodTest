@@ -2,7 +2,7 @@ package com.example.shopeefood.controller;
 
 import com.example.shopeefood.model.Category;
 
-import com.example.shopeefood.repository.ICartRepository;
+
 import com.example.shopeefood.repository.ICategoryRepository;
 import com.example.shopeefood.service.category.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
